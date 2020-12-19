@@ -5,13 +5,17 @@ import filmRouter from './filmRouter.js'
 import cinemaRouter from './cinemaRouter.js'
 import centerRouter from './centerRouter.js'
 
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch((err) => err);
+};
 Vue.use(VueRouter)
 
 const routes = [
   {path:'/',redirect:'/film'},
   filmRouter,
+  cinemaRouter,
   centerRouter,
-  cinemaRouter
   // {
   //   path: '/about',
   //   name: 'About',

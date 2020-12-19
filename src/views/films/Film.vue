@@ -1,38 +1,22 @@
 <template>
     <div>
-    <van-tabs @click="onClick">
-    <van-tab title="正在热映">
+        <Header></Header>
         <router-view></router-view>
-    </van-tab>
-    <van-tab title="即将上映">
-        <router-view></router-view>
-    </van-tab>
-    </van-tabs>
     </div>
 </template>
 <script>
-import Vue from 'vue';
-import { Tab, Tabs, Toast} from 'vant';
+import Vue from 'vue'
+import Header from '@/components/Navigation/Header.vue'
 
-Vue.use(Tab);
-Vue.use(Tabs);
-
-import uri from '@/config/uri'
 export default Vue.extend({
-    data(){
-        return {
-            url:['/film/nowplaying','/film/comingsoon'],
-            list: [],
-        }
+    components:{
+        Header
     },
-    methods: {
-        onClick(name, title) {
-            Toast(title);
-            this.$router.push(this.url[name])
-        },
+    methods:{
        
-    },
-    template:`
-    `,
+    }
 })
 </script>
+<style scoped>
+
+</style>

@@ -18,12 +18,12 @@ export default Vue.extend({
     data(){
         return {
             active:0,
-            uri:['/film','/cinema','/center']
+            uri:['/film/nowplaying','/cinema','/center']
         }
     },
     created(){
-        // console.log(this.$route)
-        this.active = this.uri.indexOf(this.$route.path)
+        
+        this.active = this.uri.indexOf(this.$route.path) >= 0 ? this.uri.indexOf(this.$route.path) : 0;
     },
     methods:{
         dian:function(index){

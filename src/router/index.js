@@ -12,8 +12,8 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter)
 
 const routes = [
-  {path:'/',redirect:'/film'},
-  filmRouter,
+  {path:'/',redirect:'/films'},
+  ...filmRouter,
   cinemaRouter,
   centerRouter,
   // {

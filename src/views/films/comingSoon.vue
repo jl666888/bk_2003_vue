@@ -1,5 +1,6 @@
 <template>
-    <div class="con">
+    <div class="con warpper" :style="{height: height + 'px'}">
+        <div>
         <van-loading size="24px" type="spinner" vertical v-show="isloading">加载中...</van-loading>
         <van-card
         v-for="item in list"
@@ -17,30 +18,39 @@
             <div style="fontSize:13px">主演：<span>{{item.actors | filer}}</span></div>
             <div style="fontSize:13px">{{item.nation}} | {{item.runtime}}分钟</div>
         </template>
+        <template #footer>
+            <van-button class="abc" plain hairline type="primary" @click="buy(item.filmId)" size="mini">预约</van-button>
+        </template>
         </van-card>
+        </div>
     </div>
 </template>
 <script>
 import Vue from 'vue'
 import uri from '@/config/uri'
-import { List, Card, Loading} from 'vant';
+import { List, Card, Loading } from 'vant';
+import BScroll from 'better-scroll';
 Vue.use(Loading);
 Vue.use(List);
 Vue.use(Card);
 export default Vue.extend({
     data() {
         return {
+            height:0,
             isloading:true,
             list: [],
+            num:1,
             loading: false,
-            finished: false,
+            bs:null,
+            y:0,
+            axios11:true,
         };
     },
     created(){
-        this.$http.get(uri.getComingSoon).then(ret => {
-            this.list = ret.data.films;
-            this.isloading = false;
-        })
+        this.getData();
+    },
+    mounted(){
+        this.height = document.documentElement.clientHeight - 94;
     },
     filters:{
         filer(value){
@@ -54,7 +64,49 @@ export default Vue.extend({
                 return '暂无主演';
             }
         }
-    }
+    },
+    methods:{
+        getData:function(cd = null){
+            
+            this.$http.get(uri.getComingSoon + `?pageNum=${this.num}`).then(ret => {
+                if(Math.ceil(ret.data.total/10) > this.num){
+                    this.num++;  
+                }else{
+                    this.axios11 = false
+                    this.num = Math.ceil(ret.data.total/10);
+                }
+                // console.log(ret.data.total)
+                // this.num++;
+                // //数组拼接
+                // this.list = this.list.concat(ret.data.films);
+                // // 合并展开运算符
+                this.list = [...this.list,...ret.data.films];
+                if(cd){
+                    cd();
+                }else{
+                    this.isloading = false;
+                }   
+            })
+        },
+        buy:function(id){
+            this.$router.push('/film/' + id)
+        }
+    },
+    updated(){
+        this.bs = new BScroll('.warpper',{
+            click:true,
+            startY:this.y,
+            pullUpLoad: true,
+        }) 
+        this.bs.on('pullingUp', () => {
+            if(!this.axios11) return;
+            if(this.bs.y !== this.y){
+                this.getData();
+                this.y = this.bs.y;
+                this.bs.finishPullUp();
+            }
+        })
+    },
 })
 </script>
 <style scoped>
@@ -75,5 +127,9 @@ img{
     width: 64px;
     height: 90px;
     border-radius: 0;
+}
+.abc{
+    position: relative;
+    top: -45px;
 }
 </style>

@@ -1,9 +1,11 @@
 <template>
-    <div :class="{header1:header}">
-        <van-tabs @click="onClick" v-model="active">
-            <van-tab title="正在热映"></van-tab>
-            <van-tab title="即将上映"></van-tab>
-        </van-tabs>
+    <div style="height:44px">
+        <div :class="{header1:header}">
+            <van-tabs @click="onClick" v-model="active">
+                <van-tab title="正在热映"></van-tab>
+                <van-tab title="即将上映"></van-tab>
+            </van-tabs>
+        </div>
     </div>
 </template>
 <script>
@@ -19,7 +21,7 @@ export default Vue.extend({
         return {
             header:false,
             active:0,
-            url:['/film/nowplaying','/film/comingsoon'],
+            url:['/films/nowplaying','/films/comingsoon'],
             list: [],
         }
     },
@@ -35,6 +37,7 @@ export default Vue.extend({
     mounted(){
         window.addEventListener('scroll',()=>{
             let topNum = document.documentElement.scrollTop;
+            // console.log(topNum)
             if(topNum > 200){
                 this.header = true;
             }else{
@@ -48,7 +51,7 @@ export default Vue.extend({
 .header1{
     position: fixed;
     top: 0;
-    z-index: 111;
+    z-index: 1111;
     width: 100%;
 }
 </style>

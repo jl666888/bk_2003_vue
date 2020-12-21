@@ -9,6 +9,7 @@
         <van-card
         v-for="item in list"
         :key="item.filmId"
+        @click="buy(item.filmId)"
         >
         <template #title>
             <div style="fontSize:16px">{{item.name}}<span class="dd">{{item.filmType.name}}</span></div>
@@ -22,7 +23,7 @@
             <div style="fontSize:13px">{{item.nation}} | {{item.runtime}}分钟</div>
         </template>
         <template #footer>
-            <van-button class="abc" plain hairline type="primary" @click="buy(item.filmId)" size="mini">购票</van-button>
+            <van-button class="abc" plain hairline type="primary" @click.stop="details(item.filmId)" size="mini">购票</van-button>
         </template>
         </van-card>
         </van-pull-refresh>
@@ -46,6 +47,7 @@ export default Vue.extend({
             list: [],
             loading: false,
             finished: false,
+            axios11:true,
         };
     },
     created(){
@@ -66,11 +68,16 @@ export default Vue.extend({
     },
     methods:{
         getData:function(cd = null){
-
+            
+            if(!this.axios11){
+                this.isLoading = false
+                return;
+            }
             this.$http.get(uri.getNowPlaying + `?pageNum=${this.num}`).then(ret => {
                 if(Math.ceil(ret.data.total/10) > this.num){
                     this.num++;
                 }else{
+                    this.axios11 = false;
                     this.num = Math.ceil(ret.data.total/10);
                 }
                 // console.log(ret.data.total)
@@ -93,10 +100,15 @@ export default Vue.extend({
                 this.isLoading = false
             });   
         },
+        details:function(id){
+            this.$router.push('/film/' + id + '/cinemas')
+        },
         buy:function(id){
             // console.log(id);
-            this.$router.push('/film/' + id)
-        }
+            this.$router.push('/film/' + id);
+            // console.log();
+        },
+        
     }
 })
 </script>

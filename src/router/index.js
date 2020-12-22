@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import filmRouter from './filmRouter.js'
 import cinemaRouter from './cinemaRouter.js'
 import centerRouter from './centerRouter.js'
+import CityRouter from './cityRouter.js'
 
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
@@ -16,6 +17,7 @@ const routes = [
   ...filmRouter,
   cinemaRouter,
   centerRouter,
+  CityRouter,
   // {
   //   path: '/about',
   //   name: 'About',
